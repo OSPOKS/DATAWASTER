@@ -1,0 +1,92 @@
+/* General Background Styling */
+.bg-dark {
+    background-color: #232323 !important;
+}
+
+/* Range Slider Base Styling */
+.form-range {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 12px;
+    border-radius: 15px;
+    background: linear-gradient(to right, #198754, #28a745);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.2); /* Inner shadow */
+}
+
+/* Range Slider Thumb Styling */
+.form-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #198754;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s ease;
+    box-shadow: 0 0 8px rgba(25, 133, 84, 0.8);
+}
+
+.form-range::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #198754;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s ease;
+    box-shadow: 0 0 8px rgba(25, 133, 84, 0.8);
+}
+
+.form-range::-ms-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #198754;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s ease;
+    box-shadow: 0 0 8px rgba(25, 133, 84, 0.8);
+}
+
+/* Thumb Active State */
+.form-range:active::-webkit-slider-thumb,
+.form-range:active::-moz-range-thumb,
+.form-range:active::-ms-thumb {
+    background-color: #155d3b;
+    transform: scale(1.1);
+}
+
+/* Hover Effect */
+.form-range:hover {
+    background: linear-gradient(to right, #198754, #34d058);
+}
+
+/* Focused State */
+.form-range:focus {
+    outline: none;
+    box-shadow: 0 0 12px rgba(25, 133, 84, 0.6);
+}
+
+/* Card Styling */
+.card-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Button Styles */
+.btn-success {
+    background-color: #198754;
+}
+
+.btn-success:hover {
+    background-color: #155d3b;
+}
+
+/* Alert Style */
+.alert {
+    background-color: #232323;
+    color: white;
+    text-align: center;
+}
