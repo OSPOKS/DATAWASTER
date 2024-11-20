@@ -14,5 +14,8 @@ This project was built purely for educational purposes and personal entertainmen
 ### Safety Disclaimer:
 This tool is intended solely for learning and experimentation. It is not designed or recommended for malicious activities or server abuse. Always respect server policies and avoid excessive or unauthorized use of resources. Misuse may result in violating terms of service or legal consequences.
 
+### Contribute:
+Contribute to this project to make it better! I need your help to add new features, optimize functionality, and make this a more robust tool. Feel free to submit your ideas and improvements!
+
 ### Note:
 Use this project responsibly and consider the impact of your actions on shared resources and servers. It is meant to entertain and educate, not harm.
