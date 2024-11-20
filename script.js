@@ -23,7 +23,8 @@ function start() {
                 }
 
                 instantTime = Date.now();
-                const t = fetch("https://i.ibb.co/qJPr4nz/data-waster-hosting.png?" + Math.random())
+                const t = fetch("https://picsum.photos/200?" + Math.random())
+
                     .then(response => {
                         if (response.status == 200) {
                             dataWasted += chunks;
