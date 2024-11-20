@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="Data Waster, Waster, DataWaster, Bandwidth Waster, Bandwidth Utilizer, Waste, Internet Waste">
+    <meta name="description" content="The Best way to waste your valuable data,internet or bandwidth at zero cost no ads">
+    <title>Data Waster</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body class="bg-dark">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark bg-drak">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><i class="material-icons" style="font-size:60px;">wifi</i></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#aboutModal">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Credits</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- About Modal -->
+    <div class="modal fade" id="aboutModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">About</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Data Waster is an open-source Data, Internet, or Bandwidth Waster/Consumer. It is for educational purposes only.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container text-center my-5">
+        <h1 class="text-white">Data Waster</h1>
+        <h4 class="text-white">Waste Your Valuable Data Here!</h4>
+        <button class="btn btn-success" id="startBtn">Start Wasting</button>
+        <button class="btn btn-warning my-3" data-bs-toggle="collapse" data-bs-target="#advanceOptions">Advanced Options</button>
+
+        <!-- Advanced Options -->
+        <div class="collapse" id="advanceOptions">
+            <div class="card mt-3 p-3">
+                <label for="threadsRange" class="form-label text-white">Threads</label>
+                <input type="range" class="form-range" id="threadsRange" min="0" max="8" value="1">
+                <label for="stopafter" class="form-label text-white mt-3">Stop After (MB)</label>
+                <input type="number" class="form-control" id="stopafter" value="0">
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="card-group mt-5">
+            <div class="card text-white bg-dark">
+                <div class="card-body">
+                    <h5 class="card-title">Data Wasted</h5>
+                    <p class="card-text" id="dataWastedText">0 MB</p>
+                </div>
+            </div>
+            <div class="card text-white bg-dark">
+                <div class="card-body">
+                    <h5 class="card-title">Time Running</h5>
+                    <p class="card-text" id="timeRunningText">0 sec</p>
+                </div>
+            </div>
+            <div class="card text-white bg-dark">
+                <div class="card-body">
+                    <h5 class="card-title">Speed</h5>
+                    <p class="card-text" id="averageSpeedText">0 MBps</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="alert alert-dark mt-4">
+            View Repository on <a href="https://github.com/ospoks/DataWaster" class="alert-link" target="_blank">GitHub</a>.
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+</body>
+
+</html>
