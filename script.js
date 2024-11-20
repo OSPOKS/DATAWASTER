@@ -1,4 +1,4 @@
-// Default Configurations
+
 let chunks = 1024;
 let threads = 1;
 let dataWasted = 0;
@@ -13,7 +13,7 @@ const element = document.getElementById("startBtn");
 const timeObject = document.getElementById("timeRunningText");
 const speedObject = document.getElementById("averageSpeedText");
 
-// Start Function
+
 function start() {
     for (let i = 0; i < threads; i++) {
         const temp = setInterval(() => {
@@ -43,7 +43,7 @@ function start() {
     }
 }
 
-// Stop Function
+
 function stop() {
     running = false;
     element.classList.remove("btn-danger");
@@ -52,7 +52,7 @@ function stop() {
     threadsArr.forEach(clearInterval);
 }
 
-// Update Timer
+
 function timeRunningUpdate() {
     setInterval(() => {
         time += 1;
@@ -66,7 +66,7 @@ function timeRunningUpdate() {
     }, 1000);
 }
 
-// Start/Stop Button Click Event
+
 document.getElementById("startBtn").addEventListener("click", () => {
     const rangeBar = document.getElementById("threadsRange");
     const stopafter = document.getElementById("stopafter");
