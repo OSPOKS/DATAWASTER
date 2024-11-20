@@ -1,10 +1,10 @@
-/* General Body Styling */
+
 body {
     background: linear-gradient(to right, #1e3c72, #2a5298);
     font-family: 'Arial', sans-serif;
 }
 
-/* Blinking animation for Wi-Fi Icon */
+
 @keyframes blink {
     0% {
         opacity: 1;
@@ -17,12 +17,12 @@ body {
     }
 }
 
-/* Make the Wi-Fi icon blink */
+
 .wifi-icon {
     animation: blink 1s infinite;
 }
 
-/* Navbar Styling */
+
 .navbar {
     background-color: #005f7f !important;
     padding: 15px;
@@ -37,7 +37,7 @@ body {
     border-color: white;
 }
 
-/* Button Styling */
+
 .btn {
     border-radius: 25px;
     font-size: 1.1rem;
@@ -45,7 +45,7 @@ body {
     margin: 10px;
 }
 
-/* Speedometer Styling */
+
 .speedo-container {
     position: fixed;
     top: 50%;
@@ -82,7 +82,7 @@ body {
     z-index: 1;
 }
 
-/* Modal Styling */
+
 .modal-content {
     background-color: #333;
     color: white;
@@ -96,7 +96,7 @@ body {
     background-color: #444;
 }
 
-/* Advanced Options Card */
+
 .card {
     background-color: #222;
     border: none;
@@ -111,7 +111,7 @@ body {
     color: lightgray;
 }
 
-/* Stats Section Styling */
+
 .card-group {
     display: flex;
     justify-content: space-between;
@@ -132,25 +132,25 @@ body {
     font-size: 1.3rem;
 }
 
-/* Alert Styling */
+
 .alert-info {
     background-color: #005f7f;
     color: white;
     font-size: 1.1rem;
 }
 
-/* Text Styling */
+
 .text-white {
     color: white !important;
 }
 
-/* Button for starting and advanced options */
+
 .btn-lg {
     font-size: 1.5rem;
     padding: 15px 30px;
 }
 
-/* Button on hover */
+
 .btn:hover {
     transform: scale(1.05);
     transition: transform 0.3s ease;
