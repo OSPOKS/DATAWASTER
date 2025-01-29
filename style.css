@@ -1,157 +1,62 @@
+:root {
+    --neon-color: #0fa;
+    --metric-bg: rgba(255, 255, 255, 0.05);
+}
 
 body {
-    background: linear-gradient(to right, #1e3c72, #2a5298);
-    font-family: 'Arial', sans-serif;
+    min-height: 100vh;
 }
 
-
-@keyframes blink {
-    0% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.3;
-    }
-    100% {
-        opacity: 1;
-    }
+.neon-text {
+    color: var(--neon-color);
+    text-shadow: 0 0 10px var(--neon-color);
 }
 
-
-.wifi-icon {
-    animation: blink 1s infinite;
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
-
-.navbar {
-    background-color: #005f7f !important;
-    padding: 15px;
+.metric {
+    background: var(--metric-bg);
+    border-radius: 8px;
+    padding: 1.5rem;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.navbar-brand {
-    font-size: 2rem;
-    color: white;
+.metric .value {
+    font-size: 2.2rem;
+    font-weight: 700;
+    display: block;
 }
 
-.navbar-toggler {
-    border-color: white;
+.metric .label {
+    color: #aaa;
+    font-size: 0.9rem;
 }
 
-
-.btn {
-    border-radius: 25px;
-    font-size: 1.1rem;
-    padding: 10px 20px;
-    margin: 10px;
-}
-
-
-.speedo-container {
-    position: fixed;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    width: 100px;
-    height: 100px;
-    background-color: #222;
-    border-radius: 50%;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-    font-size: 1.5rem;
-    font-weight: bold;
+.btn-success {
+    transition: all 0.3s ease;
     position: relative;
+    overflow: hidden;
 }
 
-.speedo-container .speedo-meter {
-    position: absolute;
-    background: linear-gradient(to top, #00c6ff, #0072ff);
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    transform: rotate(-90deg);
-    z-index: 0;
+.btn-success.active {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 15px #dc3545;
 }
 
-.speedo-text {
-    position: absolute;
-    font-size: 1.2rem;
-    color: white;
-    z-index: 1;
-}
-
-
-.modal-content {
-    background-color: #333;
-    color: white;
-}
-
-.modal-header {
-    background-color: #444;
-}
-
-.modal-footer {
-    background-color: #444;
-}
-
-
-.card {
-    background-color: #222;
-    border: none;
-}
-
-.card-title {
-    color: white;
-    font-size: 1.25rem;
-}
-
-.card-text {
-    color: lightgray;
-}
-
-
-.card-group {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 50px;
-}
-
-.card {
-    background-color: #1e1e1e;
-    border-radius: 10px;
-    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.4);
-}
-
-.card-body {
-    padding: 20px;
-}
-
-.card-body h5 {
-    font-size: 1.3rem;
-}
-
-
-.alert-info {
-    background-color: #005f7f;
-    color: white;
-    font-size: 1.1rem;
-}
-
-
-.text-white {
-    color: white !important;
-}
-
-
-.btn-lg {
-    font-size: 1.5rem;
-    padding: 15px 30px;
-}
-
-
-.btn:hover {
-    transform: scale(1.05);
-    transition: transform 0.3s ease;
+@media (max-width: 768px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+    
+    .metric .value {
+        font-size: 1.8rem;
+    }
 }
