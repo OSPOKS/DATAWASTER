@@ -10,7 +10,12 @@ class BandwidthUtilizer {
             speedSamples: []
         };
 
-        this.elements = {
+        this.elements = this.getElements();
+        this.initialize();
+    }
+
+    getElements() {
+        return {
             controlBtn: document.getElementById('controlBtn'),
             dataMetric: document.getElementById('dataMetric'),
             speedMetric: document.getElementById('speedMetric'),
@@ -19,8 +24,6 @@ class BandwidthUtilizer {
             dataLimit: document.getElementById('dataLimit'),
             threadCount: document.getElementById('threadCount')
         };
-
-        this.initialize();
     }
 
     initialize() {
@@ -30,86 +33,64 @@ class BandwidthUtilizer {
         });
 
         this.elements.dataLimit.addEventListener('change', (e) => {
-            this.state.limit = parseInt(e.target.value) * 1024; // Convert MB to KB
+            this.state.limit = parseInt(e.target.value) * 1024;
         });
 
         this.elements.controlBtn.addEventListener('click', () => this.toggle());
     }
 
     toggle() {
-        if (!this.state.active) {
-            if (!confirm('This will consume significant data. Proceed?')) return;
-            this.start();
-        } else {
-            this.stop();
-        }
+        this.state.active ? this.stop() : this.start();
     }
 
     async fetchChunk() {
         try {
             const start = performance.now();
             const response = await fetch(`https://picsum.photos/300/?${Math.random()}`);
+            if (!response.ok) return;
             
-            if (!response.ok) return false;
-            
-            const kb = 300; // Approx image size in KB
+            const kb = 300;
             const duration = (performance.now() - start) / 1000;
-            
             this.state.dataUsed += kb;
-            this.state.speedSamples.push((kb / duration) * 8); // Kbps
             
+            this.state.speedSamples.push((kb / duration) * 8);
             if (this.state.speedSamples.length > 10) {
                 this.state.speedSamples.shift();
             }
-            
-            return true;
         } catch (error) {
             console.error('Network error:', error);
-            return false;
         }
     }
 
     updateUI() {
-        // Data display
-        this.elements.dataMetric.textContent = 
-            `${(this.state.dataUsed / 1024).toFixed(1)} MB`;
-
-        // Speed calculation
-        const avgSpeed = this.state.speedSamples.length > 0 ?
-            this.state.speedSamples.reduce((a, b) => a + b) / this.state.speedSamples.length :
-            0;
+        this.elements.dataMetric.textContent = `${(this.state.dataUsed / 1024).toFixed(1)} MB`;
         
-        this.elements.speedMetric.textContent = 
-            `${avgSpeed.toFixed(1)} Kbps`;
+        const avgSpeed = this.state.speedSamples.length ?
+            this.state.speedSamples.reduce((a, b) => a + b) / this.state.speedSamples.length : 0;
+        
+        this.elements.speedMetric.textContent = `${avgSpeed.toFixed(1)} Kbps`;
 
-        // Time calculation
-        const seconds = Math.floor((Date.now() - this.state.startTime) / 1000);
-        const timeString = new Date(seconds * 1000)
-            .toISOString().substr(11, 8);
-        this.elements.timeMetric.textContent = timeString;
+        const elapsed = Math.floor((Date.now() - this.state.startTime) / 1000);
+        this.elements.timeMetric.textContent = new Date(elapsed * 1000).toISOString().substr(11, 8);
     }
 
     start() {
+        if (!confirm('This will consume significant data. Proceed?')) return;
+
         this.state.active = true;
         this.state.startTime = Date.now();
-        
         this.elements.controlBtn.classList.add('active');
         this.elements.controlBtn.textContent = 'Stop Utilization';
 
-        // Create workers
         for (let i = 0; i < this.state.threads; i++) {
             const interval = setInterval(async () => {
-                if (!this.state.active) return;
-                
-                if (this.state.limit > 0 && this.state.dataUsed >= this.state.limit) {
+                if (!this.state.active || (this.state.limit > 0 && this.state.dataUsed >= this.state.limit)) {
                     this.stop();
                     return;
                 }
-
                 await this.fetchChunk();
                 this.updateUI();
             }, 1000);
-
             this.state.intervals.push(interval);
         }
     }
@@ -125,6 +106,4 @@ class BandwidthUtilizer {
 }
 
 // Initialize application
-document.addEventListener('DOMContentLoaded', () => {
-    new BandwidthUtilizer();
-});
+document.addEventListener('DOMContentLoaded', () => new BandwidthUtilizer());
