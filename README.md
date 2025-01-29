@@ -1,3 +1,4 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/fe83e381-e392-42ed-8b59-5c9e8f566aa9/deploy-status)](https://app.netlify.com/sites/datawaster/deploys)
 # Data Waster
 
 This project is a simple web-based application designed to simulate continuous data usage by repeatedly fetching random images from a server. It allows users to experiment with concepts like parallel requests, network speed calculation, and resource tracking. The application runs multiple threads (as configured by the user) to fetch images, measures the total amount of data used (in MB), and calculates the average speed (in Kbps). The runtime is also dynamically tracked and displayed. Users can set a data usage limit to stop the process automatically or run it indefinitely until stopped manually.
