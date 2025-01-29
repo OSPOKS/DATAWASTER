@@ -1,87 +1,130 @@
+class BandwidthUtilizer {
+    constructor() {
+        this.state = {
+            active: false,
+            startTime: null,
+            dataUsed: 0,
+            threads: 1,
+            limit: 0,
+            intervals: [],
+            speedSamples: []
+        };
 
-let chunks = 1024;
-let threads = 1;
-let dataWasted = 0;
-let stopAfter = 0;
-let running = false;
-let time = 0;
-let instantTime = 0;
-let loader = 0;
-let threadsArr = [];
+        this.elements = {
+            controlBtn: document.getElementById('controlBtn'),
+            dataMetric: document.getElementById('dataMetric'),
+            speedMetric: document.getElementById('speedMetric'),
+            timeMetric: document.getElementById('timeMetric'),
+            threadControl: document.getElementById('threadControl'),
+            dataLimit: document.getElementById('dataLimit'),
+            threadCount: document.getElementById('threadCount')
+        };
 
-const element = document.getElementById("startBtn");
-const timeObject = document.getElementById("timeRunningText");
-const speedObject = document.getElementById("averageSpeedText");
+        this.initialize();
+    }
 
+    initialize() {
+        this.elements.threadControl.addEventListener('input', (e) => {
+            this.state.threads = parseInt(e.target.value);
+            this.elements.threadCount.textContent = e.target.value;
+        });
 
-function start() {
-    for (let i = 0; i < threads; i++) {
-        const temp = setInterval(() => {
-            if (running) {
-                if (stopAfter != 0 && dataWasted / 1024 >= stopAfter) {
-                    stop();
+        this.elements.dataLimit.addEventListener('change', (e) => {
+            this.state.limit = parseInt(e.target.value) * 1024; // Convert MB to KB
+        });
+
+        this.elements.controlBtn.addEventListener('click', () => this.toggle());
+    }
+
+    toggle() {
+        if (!this.state.active) {
+            if (!confirm('This will consume significant data. Proceed?')) return;
+            this.start();
+        } else {
+            this.stop();
+        }
+    }
+
+    async fetchChunk() {
+        try {
+            const start = performance.now();
+            const response = await fetch(`https://picsum.photos/300/?${Math.random()}`);
+            
+            if (!response.ok) return false;
+            
+            const kb = 300; // Approx image size in KB
+            const duration = (performance.now() - start) / 1000;
+            
+            this.state.dataUsed += kb;
+            this.state.speedSamples.push((kb / duration) * 8); // Kbps
+            
+            if (this.state.speedSamples.length > 10) {
+                this.state.speedSamples.shift();
+            }
+            
+            return true;
+        } catch (error) {
+            console.error('Network error:', error);
+            return false;
+        }
+    }
+
+    updateUI() {
+        // Data display
+        this.elements.dataMetric.textContent = 
+            `${(this.state.dataUsed / 1024).toFixed(1)} MB`;
+
+        // Speed calculation
+        const avgSpeed = this.state.speedSamples.length > 0 ?
+            this.state.speedSamples.reduce((a, b) => a + b) / this.state.speedSamples.length :
+            0;
+        
+        this.elements.speedMetric.textContent = 
+            `${avgSpeed.toFixed(1)} Kbps`;
+
+        // Time calculation
+        const seconds = Math.floor((Date.now() - this.state.startTime) / 1000);
+        const timeString = new Date(seconds * 1000)
+            .toISOString().substr(11, 8);
+        this.elements.timeMetric.textContent = timeString;
+    }
+
+    start() {
+        this.state.active = true;
+        this.state.startTime = Date.now();
+        
+        this.elements.controlBtn.classList.add('active');
+        this.elements.controlBtn.textContent = 'Stop Utilization';
+
+        // Create workers
+        for (let i = 0; i < this.state.threads; i++) {
+            const interval = setInterval(async () => {
+                if (!this.state.active) return;
+                
+                if (this.state.limit > 0 && this.state.dataUsed >= this.state.limit) {
+                    this.stop();
+                    return;
                 }
 
-                instantTime = Date.now();
-                const t = fetch("https://picsum.photos/200?" + Math.random())
+                await this.fetchChunk();
+                this.updateUI();
+            }, 1000);
 
-                    .then(response => {
-                        if (response.status == 200) {
-                            dataWasted += chunks;
-                            document.getElementById("dataWastedText").innerHTML = parseInt(dataWasted / 1024) + " MB";
-                            if (loader % threads == 0) {
-                                instantTime = Date.now() - instantTime;
-                                speedObject.innerHTML = parseInt((chunks) / (instantTime / 1000)) * 8 + " Kbps";
-                            }
-                        }
-                    });
-
-                loader += 1;
-            }
-        }, 3000);
-        threadsArr.push(temp);
-    }
-}
-
-
-function stop() {
-    running = false;
-    element.classList.remove("btn-danger");
-    element.classList.add("btn-success");
-    element.innerHTML = "Start Wasting";
-    threadsArr.forEach(clearInterval);
-}
-
-
-function timeRunningUpdate() {
-    setInterval(() => {
-        time += 1;
-        if (time < 60) {
-            timeObject.innerHTML = time + " sec";
-        } else if (time < 3600) {
-            timeObject.innerHTML = parseInt(time / 60) + " min " + time % 60 + " sec";
-        } else {
-            timeObject.innerHTML = parseInt(time / 3600) + " hrs " + parseInt((time - parseInt(time / 3600) * 3600) / 60) + " min " + time % 60 + " sec";
+            this.state.intervals.push(interval);
         }
-    }, 1000);
+    }
+
+    stop() {
+        this.state.active = false;
+        this.state.intervals.forEach(clearInterval);
+        this.state.intervals = [];
+        
+        this.elements.controlBtn.classList.remove('active');
+        this.elements.controlBtn.textContent = 'Start Utilization';
+    }
 }
 
-
-document.getElementById("startBtn").addEventListener("click", () => {
-    const rangeBar = document.getElementById("threadsRange");
-    const stopafter = document.getElementById("stopafter");
-
-    threads = parseInt(rangeBar.value) + 1;
-    stopAfter = stopafter.value ? dataWasted + parseInt(stopafter.value) : 0;
-
-    if (running) {
-        stop();
-    } else {
-        running = true;
-        element.classList.remove("btn-success");
-        element.classList.add("btn-danger");
-        element.innerHTML = "Stop Wasting";
-        start();
-        timeRunningUpdate();
-    }
+// Initialize application
+document.addEventListener('DOMContentLoaded', () => {
+    new BandwidthUtilizer();
 });
