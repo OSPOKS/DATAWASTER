@@ -1,140 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="keywords" content="Data Waster, Waster, DataWaster, Bandwidth Waster, Bandwidth Utilizer, Waste, Internet Waste">
-    <meta name="description" content="The Best way to waste your valuable data, internet or bandwidth at zero cost no ads">
-    <title>Data Waster</title>
-
+    <meta name="keywords" content="Data Waster, Bandwidth Utilization">
+    <meta name="description" content="Open-source bandwidth utilization tool for educational purposes">
     
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Bootstrap & Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
-
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
     
-
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>DataWaster</title>
 </head>
+<body class="bg-dark text-light">
+    <!-- Warning Modal -->
+    <div class="modal fade" id="warningModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-header border-warning">
+                    <h5 class="modal-title text-warning">⚠️ Warning</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    This tool consumes significant network data. Use responsibly!
+                </div>
+                <div class="modal-footer border-top-warning">
+                    <button type="button" class="btn btn-outline-warning" data-bs-dismiss="modal">Accept</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<body class="bg-gradient">
-
-
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#"><i class="material-icons wifi-icon" style="font-size: 50px;">wifi</i> Data Waster</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <!-- Main Interface -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-black">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="material-icons me-2">speed</i>DataWaster
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#aboutModal">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Credits</a>
+                        <button class="nav-link" data-bs-toggle="modal" data-bs-target="#settingsModal">
+                            <i class="material-icons">settings</i>
+                        </button>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
+    <main class="container py-5">
+        <div class="text-center mb-5">
+            <h1 class="display-4 mb-3 neon-text">Bandwidth Utilizer</h1>
+            <div class="dashboard mb-4">
+                <div class="metric">
+                    <span class="value" id="dataMetric">0 MB</span>
+                    <span class="label">Data Used</span>
+                </div>
+                <div class="metric">
+                    <span class="value" id="speedMetric">0 Kbps</span>
+                    <span class="label">Speed</span>
+                </div>
+                <div class="metric">
+                    <span class="value" id="timeMetric">00:00:00</span>
+                    <span class="label">Duration</span>
+                </div>
+            </div>
+            <button id="controlBtn" class="btn btn-lg btn-success">
+                Start Utilization
+            </button>
+        </div>
+    </main>
 
-    <div class="modal fade" id="aboutModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+    <!-- Settings Modal -->
+    <div class="modal fade" id="settingsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark text-light">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabel">About</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title">Advanced Configuration</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    Data Waster is an open-source project designed to consume data, internet, or bandwidth for educational purposes only.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <div class="mb-3">
+                        <label class="form-label">Threads: <span id="threadCount">1</span></label>
+                        <input type="range" class="form-range" min="1" max="8" value="1" id="threadControl">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Data Limit (MB)</label>
+                        <input type="number" class="form-control bg-secondary text-light" 
+                               id="dataLimit" min="0" value="0">
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-
-    <div class="container text-center my-5">
-        <h1 class="text-white display-3 mb-4">Waste Your Data Smartly</h1>
-        <p class="text-light fs-5">Waste your valuable internet or bandwidth at zero cost. <strong>No Ads.</strong></p>
-        <button class="btn btn-success btn-lg" id="startBtn">Start Wasting</button>
-        <button class="btn btn-info btn-lg my-4" data-bs-toggle="modal" data-bs-target="#advancedOptionsModal">Advanced Options</button>
-
-        
-        <div class="row row-cols-1 row-cols-md-3 g-4 mt-5">
-            <div class="col">
-                <div class="card text-white bg-dark shadow-lg">
-                    <div class="card-body">
-                        <h5 class="card-title">Data Wasted</h5>
-                        <p class="card-text" id="dataWastedText">0 MB</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card text-white bg-dark shadow-lg">
-                    <div class="card-body">
-                        <h5 class="card-title">Time Running</h5>
-                        <p class="card-text" id="timeRunningText">0 sec</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card text-white bg-dark shadow-lg">
-                    <div class="card-body">
-                        <h5 class="card-title">Speed</h5>
-                        <p class="card-text" id="averageSpeedText">MBps</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="alert alert-info mt-4">
-            View the project on <a href="https://github.com/OSPOKS/DATAWASTER" class="alert-link" target="_blank">GitHub</a>.
-        </div>
-    </div>
-
-    <!-- Advanced Options Modal -->
-    <div class="modal fade" id="advancedOptionsModal" tabindex="-1" aria-labelledby="advancedOptionsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="advancedOptionsModalLabel">Advanced Options</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <label for="threadsRange" class="form-label">Threads</label>
-                    <input type="range" class="form-range" id="threadsRange" min="1" max="8" value="1">
-                    <div class="mt-3">
-                        <label for="stopafter" class="form-label">Stop After (MB)</label>
-                        <input type="number" class="form-control" id="stopafter" value="0">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save Options</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Speedometer -->
-    <div class="speedo-container">
-        <div class="speedo-meter"></div>
-        <div class="speedo-text" id="speedValue"> MBps</div>
-    </div>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom JS -->
-    <script src="script.js"></script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
 </body>
-
 </html>
