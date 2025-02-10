@@ -1,109 +1,73 @@
-class BandwidthUtilizer {
+// Optimized DATAWASTER script
+
+class DataWaster {
     constructor() {
-        this.state = {
-            active: false,
-            startTime: null,
-            dataUsed: 0,
-            threads: 1,
-            limit: 0,
-            intervals: [],
-            speedSamples: []
-        };
-
-        this.elements = this.getElements();
-        this.initialize();
+        this.threads = 0;
+        this.dataUsed = 0;
+        this.startTime = null;
+        this.fetchControllers = [];
+        this.isRunning = false;
+        this.maxDataLimit = null;
     }
 
-    getElements() {
-        return {
-            controlBtn: document.getElementById('controlBtn'),
-            dataMetric: document.getElementById('dataMetric'),
-            speedMetric: document.getElementById('speedMetric'),
-            timeMetric: document.getElementById('timeMetric'),
-            threadControl: document.getElementById('threadControl'),
-            dataLimit: document.getElementById('dataLimit'),
-            threadCount: document.getElementById('threadCount')
-        };
-    }
+    startWasting(threads, dataLimitMB = null) {
+        if (this.isRunning) return;
+        this.threads = threads;
+        this.dataUsed = 0;
+        this.startTime = performance.now();
+        this.isRunning = true;
+        this.maxDataLimit = dataLimitMB ? dataLimitMB * 1024 * 1024 : null;
 
-    initialize() {
-        this.elements.threadControl.addEventListener('input', (e) => {
-            this.state.threads = parseInt(e.target.value);
-            this.elements.threadCount.textContent = e.target.value;
-        });
-
-        this.elements.dataLimit.addEventListener('change', (e) => {
-            this.state.limit = parseInt(e.target.value) * 1024;
-        });
-
-        this.elements.controlBtn.addEventListener('click', () => this.toggle());
-    }
-
-    toggle() {
-        this.state.active ? this.stop() : this.start();
-    }
-
-    async fetchChunk() {
-        try {
-            const start = performance.now();
-            const response = await fetch(`https://picsum.photos/300/?${Math.random()}`);
-            if (!response.ok) return;
-            
-            const kb = 300;
-            const duration = (performance.now() - start) / 1000;
-            this.state.dataUsed += kb;
-            
-            this.state.speedSamples.push((kb / duration) * 8);
-            if (this.state.speedSamples.length > 10) {
-                this.state.speedSamples.shift();
-            }
-        } catch (error) {
-            console.error('Network error:', error);
+        for (let i = 0; i < threads; i++) {
+            this.fetchData(i);
         }
     }
 
-    updateUI() {
-        this.elements.dataMetric.textContent = `${(this.state.dataUsed / 1024).toFixed(1)} MB`;
-        
-        const avgSpeed = this.state.speedSamples.length ?
-            this.state.speedSamples.reduce((a, b) => a + b) / this.state.speedSamples.length : 0;
-        
-        this.elements.speedMetric.textContent = `${avgSpeed.toFixed(1)} Kbps`;
+    async fetchData(threadId) {
+        while (this.isRunning) {
+            try {
+                const controller = new AbortController();
+                this.fetchControllers.push(controller);
+                const response = await fetch('https://picsum.photos/200', { signal: controller.signal });
+                const blob = await response.blob();
+                this.dataUsed += blob.size;
 
-        const elapsed = Math.floor((Date.now() - this.state.startTime) / 1000);
-        this.elements.timeMetric.textContent = new Date(elapsed * 1000).toISOString().substr(11, 8);
-    }
-
-    start() {
-        if (!confirm('This will consume significant data. Proceed?')) return;
-
-        this.state.active = true;
-        this.state.startTime = Date.now();
-        this.elements.controlBtn.classList.add('active');
-        this.elements.controlBtn.textContent = 'Stop Utilization';
-
-        for (let i = 0; i < this.state.threads; i++) {
-            const interval = setInterval(async () => {
-                if (!this.state.active || (this.state.limit > 0 && this.state.dataUsed >= this.state.limit)) {
-                    this.stop();
-                    return;
+                if (this.maxDataLimit && this.dataUsed >= this.maxDataLimit) {
+                    this.stopWasting();
                 }
-                await this.fetchChunk();
-                this.updateUI();
-            }, 1000);
-            this.state.intervals.push(interval);
+            } catch (error) {
+                if (error.name !== 'AbortError') {
+                    console.error(`Thread ${threadId} fetch error:`, error);
+                }
+            }
         }
     }
 
-    stop() {
-        this.state.active = false;
-        this.state.intervals.forEach(clearInterval);
-        this.state.intervals = [];
-        
-        this.elements.controlBtn.classList.remove('active');
-        this.elements.controlBtn.textContent = 'Start Utilization';
+    stopWasting() {
+        this.isRunning = false;
+        this.fetchControllers.forEach(controller => controller.abort());
+        this.fetchControllers = [];
+        console.log(`Stopped. Total data used: ${(this.dataUsed / (1024 * 1024)).toFixed(2)} MB`);
+    }
+
+    getStats() {
+        const elapsedTime = (performance.now() - this.startTime) / 1000;
+        return {
+            dataUsedMB: (this.dataUsed / (1024 * 1024)).toFixed(2),
+            speedMbps: ((this.dataUsed * 8) / (elapsedTime * 1000000)).toFixed(2),
+            runtimeSeconds: elapsedTime.toFixed(2)
+        };
     }
 }
 
-// Initialize application
-document.addEventListener('DOMContentLoaded', () => new BandwidthUtilizer());
+// Usage
+const dataWaster = new DataWaster();
+
+// Start with 5 threads, optional 10MB limit
+dataWaster.startWasting(5, 10);
+
+// Stop manually after some time
+setTimeout(() => dataWaster.stopWasting(), 30000);
+
+// Log stats every 5 seconds
+setInterval(() => console.log(dataWaster.getStats()), 5000);
